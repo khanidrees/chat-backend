@@ -58,13 +58,6 @@ const RegisterUser =asyncHandler( async (req, res, next)=>{
     return res.status(201).json(
         new ApiResponse(200, createdUser, "User registered Successfully")
     )
-        
-        
-    
-
-    
-    
-
     
 })
 
@@ -118,4 +111,22 @@ console.log('user', user);
 
 });
 
-export { RegisterUser, loginUser};
+const getAllUsers = asyncHandler( async(req, res, next)=>{
+    try{
+        const users =await User.find({_id: {$ne:req.user._id}});
+
+        if(!Array.isArray(users)){
+            throw new ApiError(500, "Error while getting users.");
+        }
+
+        return res.status(201).json(
+            new ApiResponse(200, users, "All users")
+        );
+    }catch(e){
+        throw new ApiError(500, "Error while getting users"+e);
+    };
+    
+
+});
+
+export { RegisterUser, loginUser, getAllUsers};
